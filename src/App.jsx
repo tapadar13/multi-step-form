@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 import PersonalForm from "./components/Form/PersonalForm";
 import AddressForm from "./components/Form/AddressForm";
 import ConfirmationForm from "./components/Form/ConfirmationForm";
@@ -7,9 +8,16 @@ import Button from "./components/UI/Button";
 
 const STEPS = ["Personal Information", "Address Information", "Confirmation"];
 const STORAGE_KEY = "multistepFormData";
+const STEP_KEY = "multistepFormStep";
 
 function App() {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [currentStep, setCurrentStep] = useState(() => {
+    const savedStep = localStorage.getItem(STEP_KEY);
+    return savedStep ? parseInt(savedStep, 10) : 0;
+  });
+
   const [formData, setFormData] = useState(() => {
     const savedData = localStorage.getItem(STORAGE_KEY);
     return savedData
@@ -30,6 +38,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
   }, [formData]);
+
+  useEffect(() => {
+    localStorage.setItem(STEP_KEY, currentStep.toString());
+  }, [currentStep]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -91,11 +103,14 @@ function App() {
 
   const handleSubmit = () => {
     if (isStepValid()) {
+      setIsSubmitting(true);
+
       // Simulate API call
       setTimeout(() => {
-        alert("Form submitted successfully!");
+        // Once API call completes (simulated)
+        toast.success("Form submitted successfully!");
 
-        // Reset form and clear localStorage
+        // Reset form fields and clear localStorage
         setFormData({
           name: "",
           email: "",
@@ -107,8 +122,14 @@ function App() {
           zipCode: "",
         });
         localStorage.removeItem(STORAGE_KEY);
+
+        // Reset current step to the beginning
         setCurrentStep(0);
+
+        setIsSubmitting(false);
       }, 1000);
+    } else {
+      toast.error("Please fill out all required fields correctly.");
     }
   };
 
@@ -165,9 +186,11 @@ function App() {
           {currentStep === STEPS.length - 1 ? (
             <Button
               onClick={handleSubmit}
-              className="bg-green-500 text-white hover:bg-green-600 transition-colors"
+              className={`bg-green-500 text-white hover:bg-green-600 transition-colors ${
+                isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              Submit
+              {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           ) : (
             <Button
