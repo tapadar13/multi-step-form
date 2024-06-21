@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PersonalForm from "./components/Form/PersonalForm";
 import AddressForm from "./components/Form/AddressForm";
@@ -6,20 +6,30 @@ import ConfirmationForm from "./components/Form/ConfirmationForm";
 import Button from "./components/UI/Button";
 
 const STEPS = ["Personal Information", "Address Information", "Confirmation"];
+const STORAGE_KEY = "multistepFormData";
 
 function App() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    state: "",
-    zipCode: "",
+  const [formData, setFormData] = useState(() => {
+    const savedData = localStorage.getItem(STORAGE_KEY);
+    return savedData
+      ? JSON.parse(savedData)
+      : {
+          name: "",
+          email: "",
+          phone: "",
+          addressLine1: "",
+          addressLine2: "",
+          city: "",
+          state: "",
+          zipCode: "",
+        };
   });
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+  }, [formData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -85,7 +95,7 @@ function App() {
       setTimeout(() => {
         alert("Form submitted successfully!");
 
-        // Reset form
+        // Reset form and clear localStorage
         setFormData({
           name: "",
           email: "",
@@ -96,6 +106,7 @@ function App() {
           state: "",
           zipCode: "",
         });
+        localStorage.removeItem(STORAGE_KEY);
         setCurrentStep(0);
       }, 1000);
     }
