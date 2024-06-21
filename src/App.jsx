@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import PersonalForm from "./components/Form/PersonalForm";
 import AddressForm from "./components/Form/AddressForm";
 import ConfirmationForm from "./components/Form/ConfirmationForm";
@@ -126,24 +127,42 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6">{STEPS[currentStep]}</h1>
-        {renderStep()}
-        <div className="flex justify-between mt-6">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100 p-4">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          {STEPS[currentStep]}
+        </h1>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {renderStep()}
+          </motion.div>
+        </AnimatePresence>
+        <div className="flex justify-between mt-8">
           <Button
             onClick={handleBack}
             disabled={currentStep === 0}
-            className="bg-gray-300 text-gray-700"
+            className="bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
           >
             Back
           </Button>
           {currentStep === STEPS.length - 1 ? (
-            <Button onClick={handleSubmit} className="bg-green-500 text-white">
+            <Button
+              onClick={handleSubmit}
+              className="bg-green-500 text-white hover:bg-green-600 transition-colors"
+            >
               Submit
             </Button>
           ) : (
-            <Button onClick={handleNext} className="bg-blue-500 text-white">
+            <Button
+              onClick={handleNext}
+              className="bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+            >
               Next
             </Button>
           )}
