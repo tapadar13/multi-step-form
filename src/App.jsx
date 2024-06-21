@@ -5,6 +5,7 @@ import PersonalForm from "./components/Form/PersonalForm";
 import AddressForm from "./components/Form/AddressForm";
 import ConfirmationForm from "./components/Form/ConfirmationForm";
 import Button from "./components/UI/Button";
+import ProgressBar from "./components/UI/ProgressBar";
 
 const STEPS = ["Personal Information", "Address Information", "Confirmation"];
 const STORAGE_KEY = "multistepFormData";
@@ -161,6 +162,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100 p-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <ProgressBar currentStep={currentStep} totalSteps={STEPS.length} />
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
           {STEPS[currentStep]}
         </h1>
