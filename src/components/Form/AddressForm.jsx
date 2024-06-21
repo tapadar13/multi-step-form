@@ -1,4 +1,4 @@
-import Input from "../Input";
+import Input from "../UI/Input";
 
 const AddressForm = ({ formData, handleInputChange, errors }) => {
   return (

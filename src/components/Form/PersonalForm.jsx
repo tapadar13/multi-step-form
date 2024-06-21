@@ -1,4 +1,4 @@
-import Input from "../Input";
+import Input from "../UI/Input";
 
 const PersonalForm = ({ formData, handleInputChange, errors }) => {
   return (
