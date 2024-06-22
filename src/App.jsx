@@ -54,11 +54,20 @@ function App() {
     validateField(name, value);
   };
 
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    validateField(name, value);
+  };
+
   const validateField = (name, value) => {
     let error = "";
     switch (name) {
       case "name":
-        error = value.trim() ? "" : "Name is required";
+        if (!value.trim()) {
+          error = "Name is required";
+        } else if (!isNaN(value)) {
+          error = "Name cannot be a number";
+        }
         break;
       case "email":
         error = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
@@ -66,15 +75,44 @@ function App() {
           : "Invalid email format";
         break;
       case "phone":
-        error = /^\d{10}$/.test(value) ? "" : "Phone must be 10 digits";
+        if (!/^\d{10}$/.test(value)) {
+          error = "Phone must be 10 digits";
+        } else if (/[^0-9]/.test(value)) {
+          error = "Phone can't be letters";
+        }
         break;
       case "addressLine1":
+        if (!value.trim()) {
+          error = "Address Line 1 is required";
+        } else if (!isNaN(value)) {
+          error = "Address Line 1 cannot be a number";
+        }
+        break;
+      case "addressLine2":
+        if (value && !isNaN(value)) {
+          error = "Address Line 2 cannot be a number";
+        }
+        break;
       case "city":
+        if (!value.trim()) {
+          error = "City is required";
+        } else if (!isNaN(value)) {
+          error = "City cannot be a number";
+        }
+        break;
       case "state":
-        error = value.trim() ? "" : `${name} is required`;
+        if (!value.trim()) {
+          error = "State is required";
+        } else if (!isNaN(value)) {
+          error = "State cannot be a number";
+        }
         break;
       case "zipCode":
-        error = /^\d{5}(-\d{4})?$/.test(value) ? "" : "Invalid ZIP code";
+        if (!/^\d{6}$/.test(value)) {
+          error = "Invalid ZIP code";
+        } else if (/[^0-9]/.test(value)) {
+          error = "ZIP code cannot be a string";
+        }
         break;
       default:
         break;
@@ -142,6 +180,7 @@ function App() {
           <PersonalForm
             formData={formData}
             handleInputChange={handleInputChange}
+            handleBlur={handleBlur}
             errors={errors}
           />
         );
@@ -150,6 +189,7 @@ function App() {
           <AddressForm
             formData={formData}
             handleInputChange={handleInputChange}
+            handleBlur={handleBlur}
             errors={errors}
           />
         );
@@ -194,6 +234,7 @@ function App() {
           {currentStep === STEPS.length - 1 ? (
             <Button
               onClick={handleSubmit}
+              disabled={isSubmitting}
               className={`bg-green-500 text-white hover:bg-green-600 transition-colors ${
                 isSubmitting ? "opacity-50 cursor-not-allowed" : ""
               }`}
