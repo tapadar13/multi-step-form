@@ -23,8 +23,8 @@ This is a responsive multi-step form application built using React.js. The form 
 1. **Clone the Repository**:
 
    ```bash
-   git clone https://github.com/your-username/multi-step-form-app.git
-   cd multi-step-form-app
+   git clone https://github.com/tapadar13/multi-step-form.git
+   cd multi-step-form
    ```
 
 2. **Install Dependencies**:
@@ -74,7 +74,7 @@ This is a responsive multi-step form application built using React.js. The form 
 - **Address Line 1**: Required.
 - **City**: Required.
 - **State**: Required.
-- **Zip Code**: Must be a valid ZIP code format (5 digits or 5-4 digits).
+- **Zip Code**: Must be a valid ZIP code format (6 digits).
 
 ## Notes
 
